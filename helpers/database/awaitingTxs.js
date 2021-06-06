@@ -99,10 +99,24 @@ const voteAllowed = async (address, proposalId) => {
   }
 };
 
+const pendingTransactions = async () => {
+// Collect database connection
+const { db } = await connectToDatabase();
+
+const pendingTxs = await db.find({executed:false}).toArray();
+pendingTxs.forEach((tx) => {
+  delete tx._id;
+  delete tx.executed;
+  delete tx.createdAt;
+});
+return pendingTxs;
+}
+
 // Export functions
 export {
   insertDelegateTx,
   insertVoteTx,
   delegationAllowed,
   voteAllowed,
+  pendingTransactions,
 };
