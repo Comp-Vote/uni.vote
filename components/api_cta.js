@@ -13,7 +13,7 @@ export default function APICTA() {
           application, through our managed Public API.
         </p>
         <a
-          href="https://app.swaggerhub.com/apis-docs/arr00/COMP.vote/1.0#/default"
+          href="https://app.swaggerhub.com/apis-docs/arr00/Uni.Vote/1.0"
           target="_blank"
           rel="noopener noreferrer"
         >
