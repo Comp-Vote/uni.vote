@@ -107,7 +107,7 @@ const canDelegate = async (address, delegatee = "0x") => {
 
   // Enforces a min COMP balance
   if (parseInt(compBalance) < parseInt(process.env.MIN_COMP)) {
-    const error = new Error("COMP balance too low");
+    const error = new Error("UNI balance too low");
     error.code = 403;
     throw error;
   }
@@ -200,7 +200,7 @@ const canVote = async (address, proposalId) => {
 
   // Require at least min comp COMP delegated
   if (parseInt(votesDelegated) < parseInt(process.env.MIN_COMP)) {
-    const error = new Error("COMP delegated to address is too low");
+    const error = new Error("UNI delegated to address is too low");
     error.code = 403;
     throw error;
   }
@@ -286,7 +286,7 @@ const vote = async (address, proposalId, support, v, r, s) => {
 
   // Send notification to admin using telegram
   if (typeof process.env.NOTIFICATION_HOOK != "undefined") {
-    await axios.get(process.env.NOTIFICATION_HOOK + "New comp.vote voting sig");
+    await axios.get(process.env.NOTIFICATION_HOOK + "New uni.vote voting sig");
   }
 };
 
@@ -367,7 +367,7 @@ const delegate = async (address, delegatee, nonce, expiry, v, r, s) => {
   // Send notification to admin using telegram
   if (typeof process.env.NOTIFICATION_HOOK != "undefined") {
     await axios.get(
-      process.env.NOTIFICATION_HOOK + "New comp.vote delegation sig"
+      process.env.NOTIFICATION_HOOK + "New uni.vote delegation sig"
     );
   }
 };

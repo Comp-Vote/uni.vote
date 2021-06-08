@@ -7,6 +7,7 @@ import {
   MULTICALL_ADDRESS,
 } from "helpers/abi"; // Contract ABIs + Addresses
 
+/// Global defining key values for proposal states
 const statesKey = [
   "Pending",
   "Active",
@@ -15,8 +16,8 @@ const statesKey = [
   "Succeeded",
   "Queued",
   "Expired",
-  "Executed"
-  ];
+  "Executed",
+];
 
 /**
  * Instantiates server-side web3 connection
@@ -41,26 +42,43 @@ const Web3Handler = () => {
 };
 
 export default async (req, res) => {
-  const { page_number } = req.query;
+  let { page_number = 1, page_size = 10 } = req.query;
+  page_size = Number(page_size);
+  page_number = Number(page_number);
+  const { web3, governanceAlpha, multicall } = Web3Handler();
+  let proposalCount = Number(
+    await governanceAlpha.methods.proposalCount().call()
+  );
+  const offset = (page_number - 1) * page_size;
 
-  const {web3,governanceAlpha,multicall} = Web3Handler();
-  let proposalCount = await governanceAlpha.methods.proposalCount().call();
-  console.log(proposalCount);
-  const offset = page_number*10;
-  if(proposalCount < offset) {
-    res.status(400).end();
+  let graphRes, states;
+  let resData = {};
+
+  let pagationSummary = {};
+
+  pagationSummary.page_number = Number(page_number);
+  pagationSummary.total_pages = Math.ceil(proposalCount / page_size);
+
+  if (page_number < 1 || page_number > pagationSummary.total_pages) {
+    res.status(400).send("Invalid page number");
     return;
   }
 
-  let graphRes, states;
-
+  pagationSummary.page_size = page_size;
+  pagationSummary.total_entries = proposalCount;
+  resData.pagation_summary = pagationSummary;
+  
   [graphRes, states] = await Promise.all([
     axios.post(
       "https://api.thegraph.com/subgraphs/name/ianlapham/governance-tracking",
       {
         query:
-        `{
-          proposals(first:10 skip:` + offset +` orderBy:startBlock) {
+          `{
+          proposals(first:` +
+          page_size +
+          ` skip:` +
+          offset +
+          ` orderBy:startBlock) {
             id
             description
           }
@@ -73,7 +91,9 @@ export default async (req, res) => {
           "0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F",
           "0x3e4f49e6",
           offset + 1,
-          offset + 10 > proposalCount ? proposalCount : offset + 10,
+          offset + page_size > proposalCount
+            ? proposalCount
+            : offset + page_size,
           web3
         )
       )
@@ -83,20 +103,28 @@ export default async (req, res) => {
   for (const state of states["returnData"]) {
     stringStates.push(statesKey[Number(state[state.length - 1])]);
   }
-  console.log(graphRes.data.errors);
-  let resData = [];
+  let proposalData = [];
   for (const proposal of graphRes.data.data.proposals) {
-    //console.log(proposal)
     let newProposal = {};
-    newProposal["title"] = proposal.description.split("\n")[0].substring(2);
-    newProposal["proposalId"] = proposal.id;
-    newProposal["state"] = stringStates.shift();
-    resData.push(newProposal); 
+    newProposal.title = proposal.description.split("\n")[0].substring(2);
+    newProposal.id = proposal.id;
+    newProposal.state = stringStates.shift();
+    proposalData.push(newProposal);
   }
+  resData.proposals = proposalData;
   res.json(resData);
 };
 
-function genCalls(target, callPrefix, first, last,web3) {
+/**
+ * Generate hex calls for a call signature and a range of uint256 parameter input
+ * @param {String} target Contract to call
+ * @param {String} callPrefix Function hex sig
+ * @param {Number} first First input
+ * @param {Number} last Last input
+ * @param {Web3} web3 Web3 instance, used for encoding parameters
+ * @returns [] Call input for multicall
+ */
+function genCalls(target, callPrefix, first, last, web3) {
   let res = [];
   for (let i = first; i <= last; i++) {
     res.push({
@@ -105,5 +133,6 @@ function genCalls(target, callPrefix, first, last,web3) {
         callPrefix + web3.eth.abi.encodeParameter("uint256", i).substring(2),
     });
   }
+  console.log(res);
   return res;
 }
