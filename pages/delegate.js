@@ -31,7 +31,7 @@ export default function Delegate({
 
     // Collect next page request string and request
 
-    const nextPage = `http://localhost:3000/api/governance/accounts?page_size=10&page_number=${
+    const nextPage = `https://uni.vote/api/governance/accounts?page_size=10&page_number=${
       Number(pages.current) + 1
     }`;
     const response = await axios.get(nextPage);
@@ -309,7 +309,7 @@ export default function Delegate({
 export async function getServerSideProps() {
   // Collect first page data
   const firstPage =
-    "http://localhost:3000/api/governance/accounts?page_size=10&page_number=1";
+    "https://uni.vote/api/governance/accounts?page_size=10&page_number=1";
   const response = await axios.get(firstPage);
 
   // Collect delegated vote count
