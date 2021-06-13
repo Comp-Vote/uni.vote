@@ -34,7 +34,7 @@ function useVote() {
       domain: {
         name: "Compound Governor Alpha",
         chainId: 1,
-        verifyingContract: "0xc0da01a04c3f3e0be433606045bb7017a7323e38",
+        verifyingContract: "0xC4e172459f1E7939D522503B81AFAaC1014CE6F6",
       },
       // Message
       message: {

@@ -7,7 +7,7 @@ import MULTICALL_ABI from "helpers/abi/multicall.abi";
 // Mainnet contract addresses
 const SIG_RELAYER_ADDRESS = "0xf61d8eef3f479dfa24beaa46bf6f235e6e2f7af8";
 const COMP_ADDRESS = "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984";
-const GOVERNANCE_ADDRESS = "0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F";
+const GOVERNANCE_ADDRESS = "0xC4e172459f1E7939D522503B81AFAaC1014CE6F6";
 const MULTICALL_ADDRESS = "0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441";
 
 // Export as individual exports
