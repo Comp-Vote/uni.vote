@@ -1,14 +1,14 @@
 import axios from "axios"; // Axios requests
 
 export default async (req, res) => {
-  // Pagation logic
+  // pagination logic
   let { page_number = 1, page_size = 10 } = req.query;
   const offset = (page_number - 1) * page_size;
   const total_pages = Math.ceil(2000 / page_size);
-  let pagation_summary = { total_pages, page_size, page_number };
+  let pagination_summary = { total_pages, page_size, page_number };
   if (
-    pagation_summary.page_number < 1 ||
-    pagation_summary.page_number > pagation_summary.total_pages
+    pagination_summary.page_number < 1 ||
+    pagination_summary.page_number > pagination_summary.total_pages
   ) {
     res.status(400).send("Invalid page number");
     return;
@@ -39,16 +39,36 @@ export default async (req, res) => {
       addresses: accounts.map((x) => x.id),
     }
   );
+  console.log('tally input is ' + accounts.map((x) => x.id));
   const tallyAccountsData = tallyRes.data.data.usersByAddress;
+  console.log(tallyAccountsData);
 
   // Combine maps recieved from thegraph and tally
   for (const x in accounts) {
     let a = accounts[x];
-    let b = tallyAccountsData[accounts[x].id];
+    a.address = a.id;
+    a.proposals_voted = 0;
+    a.votes = a.delegatedVotes;
+    delete a.delegatedVotes;
+    delete a.id;
+    console.log('looking for ' + accounts[x].address.toLowerCase());
+    let b = {};
+    console.log('b is: ');
+    console.log(b);
+    if(tallyAccountsData[accounts[x].address.toLowerCase()]) {
+      b = tallyAccountsData[accounts[x].address.toLowerCase()];
+      b.display_name = b.displayName;
+      b.image_url = b.avatarUrl;
+      delete b.avatarUrl;
+      delete b.tallyId;
+      delete b.addresses;
+      delete b.displayName;
+    }
+    
     accounts[x] = Object.assign({}, a, b);
     accounts[x]["rank"] = Number(x) + offset + 1;
   }
 
-  let resData = { accounts, pagation_summary };
+  let resData = { accounts, pagination_summary };
   res.json(resData);
 };

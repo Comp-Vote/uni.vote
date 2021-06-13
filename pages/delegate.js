@@ -31,9 +31,9 @@ export default function Delegate({
 
     // Collect next page request string and request
 
-    const nextPage = `https://api.compound.finance/api/v2/governance/accounts?page_size=10&page_number=${
-      pages.current + 1
-    }&with_history=false&network=mainnet`;
+    const nextPage = `http://localhost:3000/api/governance/accounts?page_size=10&page_number=${
+      Number(pages.current) + 1
+    }`;
     const response = await axios.get(nextPage);
 
     // Update proposals array with new proposals
@@ -309,13 +309,17 @@ export default function Delegate({
 export async function getServerSideProps() {
   // Collect first page data
   const firstPage =
-    "https://api.compound.finance/api/v2/governance/accounts?page_size=10&page_number=1&with_history=false&network=mainnet";
+    "http://localhost:3000/api/governance/accounts?page_size=10&page_number=1";
   const response = await axios.get(firstPage);
 
   // Collect delegated vote count
   const historyURL =
-    "https://api.compound.finance/api/v2/governance/history?network=mainnet";
-  const historyResponse = await axios.get(historyURL);
+    "https://api.thegraph.com/subgraphs/name/ianlapham/governance-tracking";
+  const historyResponse = await axios.post(historyURL, {query:`{
+  governance(id:"GOVERNANCE"){
+    delegatedVotes
+  }
+}`});
 
   // Return:
   return {
@@ -329,7 +333,7 @@ export async function getServerSideProps() {
         max: response.data.pagination_summary.total_pages,
       },
       // Total delegated vote count
-      defaultDelegated: parseFloat(historyResponse.data.votes_delegated),
+      defaultDelegated: parseFloat(historyResponse.data.data.governance.delegatedVotes),
     },
   };
 }
