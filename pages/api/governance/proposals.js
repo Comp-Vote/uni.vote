@@ -3,6 +3,7 @@ import axios from "axios"; // Axios requests
 import {
   GOVERNER_ALPHA_ABI,
   GOVERNANCE_ADDRESS,
+  GOVERNANCE_ADDRESS_DEPRECATED,
   MULTICALL_ABI,
   MULTICALL_ADDRESS,
 } from "helpers/abi"; // Contract ABIs + Addresses
@@ -30,13 +31,20 @@ const Web3Handler = () => {
   const multicall = new web3.eth.Contract(MULTICALL_ABI, MULTICALL_ADDRESS);
   const governanceAlpha = new web3.eth.Contract(
     GOVERNER_ALPHA_ABI,
-    GOVERNANCE_ADDRESS
+    GOVERNANCE_ADDRESS,
+    GOVERNANCE_ADDRESS_DEPRECATED
+  );
+
+  const governanceAlphaDeprecated = new web3.eth.Contract(
+    GOVERNER_ALPHA_ABI,
+    GOVERNANCE_ADDRESS_DEPRECATED
   );
 
   // Return web3 + contracts
   return {
     web3,
     governanceAlpha,
+    governanceAlphaDeprecated,
     multicall,
   };
 };
@@ -45,10 +53,13 @@ export default async (req, res) => {
   let { page_number = 1, page_size = 10 } = req.query;
   page_size = Number(page_size);
   page_number = Number(page_number);
-  const { web3, governanceAlpha, multicall } = Web3Handler();
-  let proposalCount = Number(
+  const { web3, governanceAlpha, governanceAlphaDeprecated, multicall } =
+    Web3Handler();
+  const proposalCount = Number(
     await governanceAlpha.methods.proposalCount().call()
   );
+  const proposalCountDeprecated = 5;
+
   const offset = (page_number - 1) * page_size;
 
   let graphRes, states;
@@ -57,7 +68,9 @@ export default async (req, res) => {
   let pagationSummary = {};
 
   pagationSummary.page_number = Number(page_number);
-  pagationSummary.total_pages = Math.ceil(proposalCount / page_size);
+  pagationSummary.total_pages = Math.ceil(
+    (proposalCount + proposalCountDeprecated) / page_size
+  );
 
   if (page_number < 1 || page_number > pagationSummary.total_pages) {
     res.status(400).send("Invalid page number");
@@ -67,10 +80,10 @@ export default async (req, res) => {
   pagationSummary.page_size = page_size;
   pagationSummary.total_entries = proposalCount;
   resData.pagation_summary = pagationSummary;
-  
+
   [graphRes, states] = await Promise.all([
     axios.post(
-      "https://api.thegraph.com/subgraphs/name/ianlapham/governance-tracking",
+      "https://api.thegraph.com/subgraphs/name/arr00/uniswap-governance-v2",
       {
         query:
           `{
@@ -88,13 +101,25 @@ export default async (req, res) => {
     multicall.methods
       .aggregate(
         genCalls(
-          "0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F",
+          GOVERNANCE_ADDRESS_DEPRECATED,
           "0x3e4f49e6",
           offset + 1,
-          offset + page_size > proposalCount
-            ? proposalCount
+          offset + page_size > proposalCountDeprecated
+            ? proposalCountDeprecated
             : offset + page_size,
           web3
+        ).concat(
+          genCalls(
+            GOVERNANCE_ADDRESS,
+            "0x3e4f49e6",
+            offset + 1 - proposalCountDeprecated > 1
+              ? offset + 1 - proposalCountDeprecated
+              : 1,
+            offset + page_size - proposalCountDeprecated > proposalCount
+              ? proposalCount
+              : offset + page_size - proposalCountDeprecated,
+            web3
+          )
         )
       )
       .call(),
@@ -103,6 +128,7 @@ export default async (req, res) => {
   for (const state of states["returnData"]) {
     stringStates.push(statesKey[Number(state[state.length - 1])]);
   }
+  console.log(stringStates);
   let proposalData = [];
   for (const proposal of graphRes.data.data.proposals) {
     let newProposal = {};
