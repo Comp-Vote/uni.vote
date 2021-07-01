@@ -3,6 +3,8 @@ import axios from "axios"; // Axios requests
 export default async (req, res) => {
   // pagination logic
   let { page_number = 1, page_size = 10 } = req.query;
+  page_number = Number(page_number);
+  page_size = Number(page_size);
   const offset = (page_number - 1) * page_size;
   const total_pages = Math.ceil(2000 / page_size);
   let pagination_summary = { total_pages, page_size, page_number };

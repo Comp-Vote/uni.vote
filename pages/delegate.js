@@ -31,8 +31,8 @@ export default function Delegate({
 
     // Collect next page request string and request
 
-    const nextPage = `https://uni.vote/api/governance/accounts?page_size=10&page_number=${
-      Number(pages.current) + 1
+    const nextPage = `api/governance/accounts?page_size=10&page_number=${
+      pages.current + 1
     }`;
     const response = await axios.get(nextPage);
 
