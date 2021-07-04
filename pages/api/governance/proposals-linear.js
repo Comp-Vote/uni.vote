@@ -83,7 +83,7 @@ export default async (req, res) => {
 
   [graphRes, states] = await Promise.all([
     axios.post(
-      "https://api.thegraph.com/subgraphs/name/arr00/uniswap-governance-v3",
+      "https://api.thegraph.com/subgraphs/name/arr00/uniswap-governance-v2",
       {
         query:
           `{

@@ -314,7 +314,7 @@ export async function getServerSideProps() {
 
   // Collect delegated vote count
   const historyURL =
-    "https://api.thegraph.com/subgraphs/name/ianlapham/governance-tracking";
+    "https://api.thegraph.com/subgraphs/name/arr00/uniswap-governance-v2";
   const historyResponse = await axios.post(historyURL, {query:`{
   governance(id:"GOVERNANCE"){
     delegatedVotes
