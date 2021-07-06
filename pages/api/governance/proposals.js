@@ -91,7 +91,7 @@ export default async (req, res) => {
           page_size +
           ` skip:` +
           offset +
-          ` orderBy:startBlock) {
+          ` orderBy:startBlock orderDirection:desc) {
             id
             description
             creationBlock
@@ -107,34 +107,47 @@ export default async (req, res) => {
     multicall.methods
       .aggregate(
         genCalls(
-          GOVERNANCE_ADDRESS_DEPRECATED,
+          GOVERNANCE_ADDRESS,
           "0x3e4f49e6",
-          offset + 1,
-          offset + page_size > proposalCountDeprecated
-            ? proposalCountDeprecated
-            : offset + page_size,
+          proposalCount - offset,
+          proposalCount - offset - page_size < 1
+            ? 1
+            : proposalCount - offset - page_size,
           web3
         ).concat(
           genCalls(
-            GOVERNANCE_ADDRESS,
+            GOVERNANCE_ADDRESS_DEPRECATED,
             "0x3e4f49e6",
-            offset + 1 - proposalCountDeprecated > 1
-              ? offset + 1 - proposalCountDeprecated
+            proposalCount >= offset
+              ? proposalCountDeprecated
+              : proposalCountDeprecated - (offset - proposalCount),
+            proposalCount > offset // part of page is new gov
+              ? proposalCountDeprecated -
+                  (page_size - (proposalCount - offset) - 1) >
+                1
+                ? proposalCountDeprecated -
+                  (page_size - (proposalCount - offset) - 1)
+                : 1
+              : proposalCountDeprecated -
+                  (offset - proposalCount - 1) -
+                  page_size >
+                1
+              ? proposalCountDeprecated -
+                (offset - proposalCount - 1) -
+                page_size
               : 1,
-            offset + page_size - proposalCountDeprecated > proposalCount
-              ? proposalCount
-              : offset + page_size - proposalCountDeprecated,
             web3
           )
         )
       )
       .call(),
   ]);
+
   let stringStates = [];
   for (const state of states["returnData"]) {
     stringStates.push(statesKey[Number(state[state.length - 1])]);
   }
-  console.log(graphRes.data);
+
   let proposalData = [];
   for (const proposal of graphRes.data.data.proposals) {
     let newProposal = {};
@@ -145,13 +158,11 @@ export default async (req, res) => {
 
     let time = null;
 
-    console.log(get_state_times)
-    if(get_state_times == 'true' || get_state_times == true) {
-      console.log('here');
+    if (get_state_times == "true" || get_state_times == true) {
       time = await getTimeFromState(currentState, proposal, web3);
     }
 
-    let stateObj = {"value": currentState, "start_time": time };
+    let stateObj = { value: currentState, start_time: time };
     newProposal.state = stateObj;
     proposalData.push(newProposal);
   }
@@ -164,20 +175,19 @@ export default async (req, res) => {
  * @param {String} target Contract to call
  * @param {String} callPrefix Function hex sig
  * @param {Number} first First input
- * @param {Number} last Last input
+ * @param {Number} last Last input (counting down)
  * @param {Web3} web3 Web3 instance, used for encoding parameters
  * @returns [] Call input for multicall
  */
 function genCalls(target, callPrefix, first, last, web3) {
   let res = [];
-  for (let i = first; i <= last; i++) {
+  for (let i = first; i >= last; i--) {
     res.push({
       target: target,
       callData:
         callPrefix + web3.eth.abi.encodeParameter("uint256", i).substring(2),
     });
   }
-  console.log(res);
   return res;
 }
 
@@ -185,7 +195,7 @@ async function getTimeFromState(state, proposal, web3) {
   let blockToFetch;
   let time = null;
 
-  switch(state) {
+  switch (state) {
     case "Pending":
       blockToFetch = proposal.creationBlock;
       break;
@@ -202,7 +212,7 @@ async function getTimeFromState(state, proposal, web3) {
       blockToFetch = proposal.endBlock;
       break;
     case "Queued":
-      time = proposal.executionETA - 60 * 60 * 24 * 2 // two days
+      time = proposal.executionETA - 60 * 60 * 24 * 2; // two days
       break;
     case "Expired":
       time = 0; // TODO: FIX
@@ -210,10 +220,12 @@ async function getTimeFromState(state, proposal, web3) {
     case "Executed":
       blockToFetch = proposal.executionBlock;
       break;
+    default:
+      console.log("fatal error");
+      console.log("state is " + state);
   }
 
-  if(time == null) {
-    console.log('block to fetch is ' + blockToFetch);
+  if (time == null) {
     const block = await web3.eth.getBlock(blockToFetch);
     return block.timestamp;
   }
