@@ -10,14 +10,14 @@ import {
 
 /// Global defining key values for proposal states
 const statesKey = [
-  "Pending",
-  "Active",
-  "Canceled",
-  "Defeated",
-  "Succeeded",
-  "Queued",
+  "Pending", // creation block
+  "Active", // start block
+  "Canceled", // cancelation block
+  "Defeated", // end block
+  "Succeeded", // end block
+  "Queued", // executionETA - 2 days
   "Expired",
-  "Executed",
+  "Executed", // execution block
 ];
 
 /**
@@ -50,7 +50,7 @@ const Web3Handler = () => {
 };
 
 export default async (req, res) => {
-  let { page_number = 1, page_size = 10 } = req.query;
+  let { page_number = 1, page_size = 10, get_state_times = false } = req.query;
   page_size = Number(page_size);
   page_number = Number(page_number);
   const { web3, governanceAlpha, governanceAlphaDeprecated, multicall } =
@@ -65,21 +65,21 @@ export default async (req, res) => {
   let graphRes, states;
   let resData = {};
 
-  let pagationSummary = {};
+  let pagination_summary = {};
 
-  pagationSummary.page_number = Number(page_number);
-  pagationSummary.total_pages = Math.ceil(
+  pagination_summary.page_number = Number(page_number);
+  pagination_summary.total_pages = Math.ceil(
     (proposalCount + proposalCountDeprecated) / page_size
   );
 
-  if (page_number < 1 || page_number > pagationSummary.total_pages) {
+  if (page_number < 1 || page_number > pagination_summary.total_pages) {
     res.status(400).send("Invalid page number");
     return;
   }
 
-  pagationSummary.page_size = page_size;
-  pagationSummary.total_entries = proposalCount;
-  resData.pagation_summary = pagationSummary;
+  pagination_summary.page_size = page_size;
+  pagination_summary.total_entries = proposalCount + 5;
+  resData.pagination_summary = pagination_summary;
 
   [graphRes, states] = await Promise.all([
     axios.post(
@@ -94,6 +94,12 @@ export default async (req, res) => {
           ` orderBy:startBlock) {
             id
             description
+            creationBlock
+            startBlock
+            endBlock
+            executionBlock
+            cancellationBlock
+            executionETA
           }
         }`,
       }
@@ -128,13 +134,25 @@ export default async (req, res) => {
   for (const state of states["returnData"]) {
     stringStates.push(statesKey[Number(state[state.length - 1])]);
   }
-  console.log(stringStates);
+  console.log(graphRes.data);
   let proposalData = [];
   for (const proposal of graphRes.data.data.proposals) {
     let newProposal = {};
     newProposal.title = proposal.description.split("\n")[0].substring(2);
     newProposal.id = proposal.id;
-    newProposal.state = stringStates.shift();
+
+    const currentState = stringStates.shift();
+
+    let time = null;
+
+    console.log(get_state_times)
+    if(get_state_times == 'true' || get_state_times == true) {
+      console.log('here');
+      time = await getTimeFromState(currentState, proposal, web3);
+    }
+
+    let stateObj = {"value": currentState, "start_time": time };
+    newProposal.state = stateObj;
     proposalData.push(newProposal);
   }
   resData.proposals = proposalData;
@@ -161,4 +179,44 @@ function genCalls(target, callPrefix, first, last, web3) {
   }
   console.log(res);
   return res;
+}
+
+async function getTimeFromState(state, proposal, web3) {
+  let blockToFetch;
+  let time = null;
+
+  switch(state) {
+    case "Pending":
+      blockToFetch = proposal.creationBlock;
+      break;
+    case "Active":
+      blockToFetch = proposal.startBlock;
+      break;
+    case "Canceled":
+      blockToFetch = proposal.cancellationBlock;
+      break;
+    case "Defeated":
+      blockToFetch = proposal.endBlock;
+      break;
+    case "Succeeded":
+      blockToFetch = proposal.endBlock;
+      break;
+    case "Queued":
+      time = proposal.executionETA - 60 * 60 * 24 * 2 // two days
+      break;
+    case "Expired":
+      time = 0; // TODO: FIX
+      break;
+    case "Executed":
+      blockToFetch = proposal.executionBlock;
+      break;
+  }
+
+  if(time == null) {
+    console.log('block to fetch is ' + blockToFetch);
+    const block = await web3.eth.getBlock(blockToFetch);
+    return block.timestamp;
+  }
+
+  return time;
 }

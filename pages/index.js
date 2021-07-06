@@ -34,7 +34,7 @@ export default function Home({ defaultProposals, defaultPages }) {
     setLoading(true);
 
     // Collect next page request string and request
-    const nextPage = `https://api.compound.finance/api/v2/governance/proposals?page_number=${
+    const nextPage = `api/governance/accounts?page_size=10&get_state_times=true&page_number=${
       pages.current + 1
     }`;
     const response = await axios.get(nextPage);
@@ -62,7 +62,7 @@ export default function Home({ defaultProposals, defaultPages }) {
     // Navigate
     window.open(
       // With target set to Compound governance proposal
-      `https://compound.finance/governance/proposals/${proposalId}`,
+      `https://app.uniswap.org/#/vote/${proposalId.replace(".","/")}`,
       // In new tab
       "_blank"
     );
@@ -98,7 +98,7 @@ export default function Home({ defaultProposals, defaultPages }) {
           <h1>Vote By Signature</h1>
           <div>
             <p>
-              Voting by signature lets you place votes across Compound Goverance
+              Voting by signature lets you place votes across Uniswap Goverance
               proposals, without having to send your transactions on-chain,
               saving fees.
             </p>
@@ -140,12 +140,11 @@ export default function Home({ defaultProposals, defaultPages }) {
                       <span>
                         {proposal.id} •{" "}
                         {firstUppercase(
-                          proposal.states[proposal.states.length - 1].state
+                          proposal.state.value
                         )}{" "}
                         {dayjs
                           .unix(
-                            proposal.states[proposal.states.length - 1]
-                              .start_time
+                            proposal.state.start_time
                           )
                           .format("MMMM D, YYYY")}
                       </span>
@@ -159,7 +158,7 @@ export default function Home({ defaultProposals, defaultPages }) {
                       >
                         Info
                       </button>
-                      {proposal.states[proposal.states.length - 1].state ===
+                      {proposal.state.value ===
                       "active" ? (
                         // Check if proposal is active
                         web3 ? (
@@ -183,7 +182,7 @@ export default function Home({ defaultProposals, defaultPages }) {
                               {buttonLoading.id === proposal.id &&
                               buttonLoading.type === 1 ? (
                                 <BeatLoader size={9} />
-                              ) : (
+                              ) : ( 
                                 "Vote Against"
                               )}
                             </button>
@@ -228,7 +227,7 @@ export default function Home({ defaultProposals, defaultPages }) {
 export async function getServerSideProps() {
   // Collect first page data
   const firstPage =
-    "https://api.compound.finance/api/v2/governance/proposals?page_number=1";
+    "https://uni.vote/api/governance/proposals?page_size=10&get_state_times=true&page_number=1";
   const response = await axios.get(firstPage);
 
   // Return:
