@@ -94,11 +94,11 @@ export default async (req, res) => {
           ` orderBy:startBlock orderDirection:desc) {
             id
             description
-            creationBlock
+            creationTime
             startBlock
             endBlock
-            executionBlock
-            cancellationBlock
+            executionTime
+            cancellationTime
             executionETA
           }
         }`,
@@ -197,13 +197,13 @@ async function getTimeFromState(state, proposal, web3) {
 
   switch (state) {
     case "Pending":
-      blockToFetch = proposal.creationBlock;
+      time = parseInt(proposal.creationTime);
       break;
     case "Active":
       blockToFetch = proposal.startBlock;
       break;
     case "Canceled":
-      blockToFetch = proposal.cancellationBlock;
+      time = parseInt(proposal.cancellationTime);
       break;
     case "Defeated":
       blockToFetch = proposal.endBlock;
@@ -212,13 +212,13 @@ async function getTimeFromState(state, proposal, web3) {
       blockToFetch = proposal.endBlock;
       break;
     case "Queued":
-      time = proposal.executionETA - 60 * 60 * 24 * 2; // two days
+      time = parseInt(roposal.executionET) - 60 * 60 * 24 * 2; // two days
       break;
     case "Expired":
-      time = 0; // TODO: FIX
+      time = parseInt(proposal.executionETA) + 1209600; // Grace period of 2 weeks
       break;
     case "Executed":
-      blockToFetch = proposal.executionBlock;
+      time = parseInt(proposal.executionTime);
       break;
     default:
       console.log("fatal error");
