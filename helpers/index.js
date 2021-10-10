@@ -1,10 +1,10 @@
 import {
   COMP_ABI,
   SIG_RELAYER_ABI,
-  GOVERNER_ALPHA_ABI,
+  GOVERNER_BRAVO_ABI,
   SIG_RELAYER_ADDRESS,
   COMP_ADDRESS,
-  GOVERNANCE_ADDRESS,
+  GOVERNANCE_ADDRESS_BRAVO,
 } from "helpers/abi"; // Contract ABIs + Addresses
 import {
   insertDelegateTx,
@@ -29,9 +29,9 @@ const Web3Handler = () => {
     SIG_RELAYER_ADDRESS
   );
   const compToken = new web3.eth.Contract(COMP_ABI, COMP_ADDRESS);
-  const governanceAlpha = new web3.eth.Contract(
-    GOVERNER_ALPHA_ABI,
-    GOVERNANCE_ADDRESS
+  const governanceBravo = new web3.eth.Contract(
+    GOVERNER_BRAVO_ABI,
+    GOVERNANCE_ADDRESS_BRAVO
   );
 
   // Return web3 + contracts
@@ -39,7 +39,7 @@ const Web3Handler = () => {
     web3,
     sigRelayer,
     compToken,
-    governanceAlpha,
+    governanceBravo,
   };
 };
 
@@ -139,6 +139,12 @@ const canVote = async (address, proposalId) => {
     throw error;
   }
 
+  if(support > 2) {
+    const error = new Error("invalid support value");
+    error.code = 422;
+    throw error;
+  }
+
   // Force address formatting
   address = address.toString().toLowerCase();
 
@@ -160,9 +166,9 @@ const canVote = async (address, proposalId) => {
   try {
     [proposal, receipt, currentBlock] = await Promise.all([
       // Collect proposal data
-      governanceAlpha.methods.proposals(proposalId).call(),
+      governanceBravo.methods.proposals(proposalId).call(),
       // Collect proposal receipt
-      governanceAlpha.methods.getReceipt(proposalId, address).call(),
+      governanceBravo.methods.getReceipt(proposalId, address).call(),
       // Collect current block number
       web3.eth.getBlockNumber(),
       // Check if vote is allowed from db
