@@ -1,6 +1,7 @@
 // Import contract abis
 import COMP_ABI from "helpers/abi/comp.abi";
 import SIG_RELAYER_ABI from "helpers/abi/SigRelayer.abi";
+import GOVERNOR_ALPHA_ABI from "helpers/abi/GovernorAlpha.abi";
 import GOVERNOR_BRAVO_ABI from "helpers/abi/GovernorBravo.abi";
 import MULTICALL_ABI from "helpers/abi/multicall.abi";
 
@@ -16,6 +17,7 @@ const GOVERNANCE_ADDRESS_BRAVO = "0x408ED6354d4973f66138C91495F2f2FCbd8724C3";
 export {
   COMP_ABI,
   SIG_RELAYER_ABI,
+  GOVERNOR_ALPHA_ABI,
   GOVERNOR_BRAVO_ABI,
   SIG_RELAYER_ADDRESS,
   COMP_ADDRESS,

@@ -1,8 +1,8 @@
 import Web3 from "web3"; // Web3
 import axios from "axios"; // Axios requests
 import {
-  GOVERNER_ALPHA_ABI,
-  GOVERNER_BRAVO_ABI,
+  GOVERNOR_ALPHA_ABI,
+  GOVERNOR_BRAVO_ABI,
   GOVERNANCE_ADDRESS_BRAVO,
   GOVERNANCE_ADDRESS_ALPHA1,
   GOVERNANCE_ADDRESS_ALPHA2,
@@ -33,17 +33,17 @@ const Web3Handler = () => {
   const multicall = new web3.eth.Contract(MULTICALL_ABI, MULTICALL_ADDRESS);
 
   const governanceBravo = new web3.eth.Contract(
-    GOVERNER_BRAVO_ABI,
+    GOVERNOR_BRAVO_ABI,
     GOVERNANCE_ADDRESS_BRAVO
   );
 
   const governanceAlpha1 = new web3.eth.Contract(
-    GOVERNER_ALPHA_ABI,
+    GOVERNOR_ALPHA_ABI,
     GOVERNANCE_ADDRESS_ALPHA1
   );
 
   const governanceAlpha2 = new web3.eth.Contract(
-    GOVERNER_ALPHA_ABI,
+    GOVERNOR_ALPHA_ABI,
     GOVERNANCE_ADDRESS_ALPHA2
   );
 
