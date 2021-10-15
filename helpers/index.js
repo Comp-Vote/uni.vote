@@ -1,7 +1,7 @@
 import {
   COMP_ABI,
   SIG_RELAYER_ABI,
-  GOVERNER_BRAVO_ABI,
+  GOVERNOR_BRAVO_ABI,
   SIG_RELAYER_ADDRESS,
   COMP_ADDRESS,
   GOVERNANCE_ADDRESS_BRAVO,
@@ -29,8 +29,8 @@ const Web3Handler = () => {
     SIG_RELAYER_ADDRESS
   );
   const compToken = new web3.eth.Contract(COMP_ABI, COMP_ADDRESS);
-  const governanceBravo = new web3.eth.Contract(
-    GOVERNER_BRAVO_ABI,
+  const governorBravo = new web3.eth.Contract(
+    GOVERNOR_BRAVO_ABI,
     GOVERNANCE_ADDRESS_BRAVO
   );
 
@@ -39,7 +39,7 @@ const Web3Handler = () => {
     web3,
     sigRelayer,
     compToken,
-    governanceBravo,
+    governorBravo,
   };
 };
 
@@ -130,17 +130,11 @@ const canDelegate = async (address, delegatee = "0x") => {
  */
 const canVote = async (address, proposalId) => {
   // Collect Web3 + contracts
-  const { web3, compToken, governanceAlpha } = Web3Handler();
+  const { web3, compToken, governorBravo } = Web3Handler();
 
   // Check for undefined inputs
   if (typeof address == "undefined" || typeof proposalId == "undefined") {
     const error = new Error("invalid input");
-    error.code = 422;
-    throw error;
-  }
-
-  if(support > 2) {
-    const error = new Error("invalid support value");
     error.code = 422;
     throw error;
   }
@@ -166,9 +160,9 @@ const canVote = async (address, proposalId) => {
   try {
     [proposal, receipt, currentBlock] = await Promise.all([
       // Collect proposal data
-      governanceBravo.methods.proposals(proposalId).call(),
+      governorBravo.methods.proposals(proposalId).call(),
       // Collect proposal receipt
-      governanceBravo.methods.getReceipt(proposalId, address).call(),
+      governorBravo.methods.getReceipt(proposalId, address).call(),
       // Collect current block number
       web3.eth.getBlockNumber(),
       // Check if vote is allowed from db
@@ -235,6 +229,12 @@ const vote = async (address, proposalId, support, v, r, s) => {
   // Check for undefined inputs
   if ([address, proposalId, support, v, r, s].includes(undefined)) {
     const error = new Error("invalid input");
+    error.code = 422;
+    throw error;
+  }
+
+  if(support > 2) {
+    const error = new Error("invalid support value");
     error.code = 422;
     throw error;
   }
