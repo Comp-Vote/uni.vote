@@ -83,9 +83,7 @@ export default async (req, res) => {
   let pagination_summary = {};
 
   pagination_summary.page_number = Number(page_number);
-  pagination_summary.total_pages = Math.ceil(
-    (proposalCount) / page_size
-  );
+  pagination_summary.total_pages = Math.ceil(proposalCount / page_size);
 
   if (page_number < 1 || page_number > pagination_summary.total_pages) {
     res.status(400).send("Invalid page number");
@@ -160,7 +158,8 @@ export default async (req, res) => {
                 ? proposalCount
                 : offset +
                     page_size +
-                    (proposalCountDeprecated1 + proposalCountDeprecated2)
+                    (proposalCountDeprecated1 + proposalCountDeprecated2),
+              web3
             )
           )
         )
