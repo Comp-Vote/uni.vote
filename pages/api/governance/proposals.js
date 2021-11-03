@@ -22,6 +22,13 @@ const statesKey = [
   "Executed", // execution block
 ];
 
+/// Global defining titles for misformatted proposals
+const MISFORMATTED_PROPOSAL_TITLES = {
+  3: "Uniswap Grants Program v0.1",
+  8: "Upgrade Governance Contract to Compound's Governor Bravo",
+  9: "Add 1 Basis Point Fee Tier",
+};
+
 /**
  * Instantiates server-side web3 connection
  */
@@ -174,7 +181,7 @@ export default async (req, res) => {
   let proposalData = [];
   for (const proposal of graphRes.data.data.proposals) {
     let newProposal = {};
-    newProposal.title = proposal.description.split("\n")[0].substring(2);
+    newProposal.title = MISFORMATTED_PROPOSAL_TITLES[proposal.id] ?? proposal.description.split("\n")[0].substring(2);
     newProposal.id = proposal.id;
 
     const currentState = stringStates.pop();
