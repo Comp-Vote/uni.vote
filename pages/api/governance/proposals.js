@@ -81,8 +81,11 @@ export default async (req, res) => {
 
   const proposalCountDeprecated1 = 5;
   const proposalCountDeprecated2 = 3;
+  const initialProposalBravo = 8;
+  const numBravoProposals = proposalCount - initialProposalBravo;
 
   const offset = (page_number - 1) * page_size;
+  console.log("Offset is " + offset);
 
   let graphRes, states;
   let resData = {};
@@ -127,45 +130,43 @@ export default async (req, res) => {
     multicall.methods
       .aggregate(
         genCalls(
-          GOVERNANCE_ADDRESS_ALPHA1,
+          GOVERNANCE_ADDRESS_BRAVO,
           "0x3e4f49e6",
-          offset + 1,
-          offset + page_size > proposalCountDeprecated1
-            ? proposalCountDeprecated1
-            : offset + page_size,
+          proposalCount - offset,
+          Math.max(
+            initialProposalBravo,
+            proposalCount - offset - page_size
+          ),
           web3
         ).concat(
           genCalls(
             GOVERNANCE_ADDRESS_ALPHA2,
             "0x3e4f49e6",
-            offset + 1 - proposalCountDeprecated1 > 1
-              ? offset + 1 - proposalCountDeprecated1
-              : 1,
-            offset + page_size - proposalCountDeprecated1 >
-              proposalCountDeprecated2
-              ? proposalCountDeprecated2
-              : offset + page_size - proposalCountDeprecated1,
+            Math.min(
+              proposalCountDeprecated2,
+              proposalCountDeprecated2 - (offset - numBravoProposals)
+            ),
+            Math.max(
+              0,
+              proposalCountDeprecated2 -
+                (page_size - (numBravoProposals - offset))
+            ),
             web3
           ).concat(
             genCalls(
-              GOVERNANCE_ADDRESS_BRAVO,
+              GOVERNANCE_ADDRESS_ALPHA1,
               "0x3e4f49e6",
-              offset +
-                1 +
-                (proposalCountDeprecated1 + proposalCountDeprecated2) >
-                8
-                ? offset +
-                    1 +
-                    (proposalCountDeprecated1 + proposalCountDeprecated2)
-                : 8,
-              offset +
-                page_size +
-                (proposalCountDeprecated1 + proposalCountDeprecated2) >
-                proposalCount
-                ? proposalCount
-                : offset +
-                    page_size +
-                    (proposalCountDeprecated1 + proposalCountDeprecated2),
+              Math.min(
+                proposalCountDeprecated1,
+                proposalCountDeprecated1 -
+                  (offset - numBravoProposals - proposalCountDeprecated2)
+              ),
+              Math.max(
+                0,
+                proposalCountDeprecated1 -
+                  (page_size -
+                    (numBravoProposals + proposalCountDeprecated2 - offset))
+              ),
               web3
             )
           )
@@ -177,25 +178,28 @@ export default async (req, res) => {
   for (const state of states["returnData"]) {
     stringStates.push(statesKey[Number(state[state.length - 1])]);
   }
-  console.log(stringStates);
   let proposalData = [];
   for (const proposal of graphRes.data.data.proposals) {
     let newProposal = {};
-    newProposal.title = MISFORMATTED_PROPOSAL_TITLES[proposal.id] ?? proposal.description.split("\n")[0].substring(2);
+    newProposal.title =
+      MISFORMATTED_PROPOSAL_TITLES[proposal.id] ??
+      proposal.description.split("\n")[0].substring(2);
     newProposal.id = proposal.id;
-    newProposal.uniswap_url = "https://app.uniswap.org/#/vote/"
-    switch(true) {
+    newProposal.uniswap_url = "https://app.uniswap.org/#/vote/";
+    switch (true) {
       case newProposal.id <= proposalCountDeprecated1:
         newProposal.uniswap_url += "0/" + newProposal.id;
         break;
-      case newProposal.id <= proposalCountDeprecated2 + proposalCountDeprecated1:
-        newProposal.uniswap_url += "1/" + (newProposal.id - proposalCountDeprecated1);
+      case newProposal.id <=
+        proposalCountDeprecated2 + proposalCountDeprecated1:
+        newProposal.uniswap_url +=
+          "1/" + (newProposal.id - proposalCountDeprecated1);
         break;
       default:
         newProposal.uniswap_url += "2/" + newProposal.id;
     }
 
-    const currentState = stringStates.pop();
+    const currentState = stringStates.shift();
     let time = null;
     if (get_state_times == "true" || get_state_times == true) {
       time = await getTimeFromState(currentState, proposal, web3);
@@ -213,14 +217,14 @@ export default async (req, res) => {
  * Generate hex calls for a call signature and a range of uint256 parameter input
  * @param {String} target Contract to call
  * @param {String} callPrefix Function hex sig
- * @param {Number} first First input
  * @param {Number} last Last input
+ * @param {Number} first First input (not inclusive)
  * @param {Web3} web3 Web3 instance, used for encoding parameters
  * @returns [] Call input for multicall
  */
-function genCalls(target, callPrefix, first, last, web3) {
+function genCalls(target, callPrefix, last, first, web3) {
   let res = [];
-  for (let i = first; i <= last; i++) {
+  for (let i = last; i > first; i--) {
     res.push({
       target: target,
       callData:
