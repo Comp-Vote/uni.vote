@@ -55,14 +55,14 @@ export default function Home({ defaultProposals, defaultPages }) {
   };
 
   /**
-   * Opens Compoung Governance proposal information in new tab
-   * @param {Number} proposalId for Compound governance proposal
+   * Opens Uniswap Governance proposal information in new tab
+   * @param {Number} uniswap_url for Uniswap governance proposal
    */
-  const proposalInfo = (proposalId) => {
+  const proposalInfo = (uniswap_url) => {
     // Navigate
     window.open(
       // With target set to Uniswap governance proposal
-      `https://app.uniswap.org/#/vote/${proposalId.replace(".","/")}`,
+      uniswap_url,
       // In new tab
       "_blank"
     );
@@ -162,7 +162,7 @@ export default function Home({ defaultProposals, defaultPages }) {
                     {/* Proposal actions */}
                     <div>
                       <button
-                        onClick={() => proposalInfo(proposal.id)}
+                        onClick={() => proposalInfo(proposal.uniswap_url)}
                         className={styles.info}
                       >
                         Info
