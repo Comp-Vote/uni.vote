@@ -44,8 +44,8 @@ export default function Header() {
           <Link href="/">
             <a>
               <img
-                src="brand/compound-logo.svg"
-                alt="Compound logo"
+                src="brand/uniswap-logo.svg"
+                alt="Uniswap logo"
                 height="30"
                 width="136"
               />
