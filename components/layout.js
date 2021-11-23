@@ -8,34 +8,34 @@ export default function Layout({ children }) {
       {/* Meta Setup */}
       <Head>
         {/* Meta */}
-        <title>Uni.Vote</title>
-        <meta name="title" content="Uni.Vote" />
+        <title>Comp.Vote</title>
+        <meta name="title" content="Comp.Vote" />
         <meta
           name="description"
-          content="Gas-less voting and delegation for Uniswap governance. Sign and relay your transactions for free."
+          content="Gas-less voting and delegation for Compound Finance governance. Sign and relay your transactions for free."
         />
 
         {/* Open Graph + Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://uni.vote" />
+        <meta property="og:url" content="https://comp.vote" />
         <meta property="og:title" content="Comp.Vote" />
         <meta
           property="og:description"
-          content="Gas-less voting and delegation for Uniswap governance. Sign and relay your transactions for free."
+          content="Gas-less voting and delegation for Compound Finance governance. Sign and relay your transactions for free."
         />
-        <meta property="og:image" content="https://uni.vote/brand/meta.png" />
+        <meta property="og:image" content="https://comp.vote/brand/meta.png" />
 
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://uni.vote" />
-        <meta property="twitter:title" content="Uni.Vote" />
+        <meta property="twitter:url" content="https://comp.vote" />
+        <meta property="twitter:title" content="Comp.Vote" />
         <meta
           property="twitter:description"
-          content="Gas-less voting and delegation for Uniswap governance. Sign and relay your transactions for free."
+          content="Gas-less voting and delegation for Compound Finance governance. Sign and relay your transactions for free."
         />
         <meta
           property="twitter:image"
-          content="https://uni.vote/brand/meta.png"
+          content="https://comp.vote/brand/meta.png"
         />
 
         {/* Favicon */}
@@ -103,7 +103,7 @@ export default function Layout({ children }) {
           </span>
           <span>Community-led and built with love.</span>
           <span>
-            Need support? <a href="mailto:help@uni.vote">help@uni.vote</a>
+            Need support? <a href="mailto:help@comp.vote">help@comp.vote</a>
           </span>
         </div>
       </div>

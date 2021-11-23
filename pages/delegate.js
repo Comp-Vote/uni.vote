@@ -81,7 +81,7 @@ export default function Delegate({
           <h1>Delegate By Signature</h1>
           <div>
             <p>
-              Delegating by signature lets you delegate your UNI to community
+              Delegating by signature lets you delegate your COMP to community
               members without having to send your transactions on-chain, saving
               fees.
             </p>
@@ -93,7 +93,7 @@ export default function Delegate({
             <div>
               <h2>
                 <a
-                  // Link to Uniswap Governance profile
+                  // Link to Compound Governance profile
                   href={`https://compound.finance/governance/address/${currentDelegate}?target_network=mainnet`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -315,13 +315,11 @@ export async function getServerSideProps() {
   // Collect delegated vote count
   const historyURL =
     "https://api.thegraph.com/subgraphs/name/arr00/uniswap-governance-v2";
-  const historyResponse = await axios.post(historyURL, {
-    query: `{
+  const historyResponse = await axios.post(historyURL, {query:`{
   governance(id:"GOVERNANCE"){
     delegatedVotes
   }
-}`,
-  });
+}`});
 
   // Return:
   return {
@@ -335,9 +333,7 @@ export async function getServerSideProps() {
         max: response.data.pagination_summary.total_pages,
       },
       // Total delegated vote count
-      defaultDelegated: parseFloat(
-        historyResponse.data.data.governance.delegatedVotes
-      ),
+      defaultDelegated: parseFloat(historyResponse.data.data.governance.delegatedVotes),
     },
   };
 }

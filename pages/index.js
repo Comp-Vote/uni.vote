@@ -79,15 +79,15 @@ export default function Home({ defaultProposals, defaultPages }) {
 
     try {
       // Call voteFor or voteAgainst based on type
-      switch (Number(type)) {
-        case 0:
-          await voteFor(proposalId);
-          break;
-        case 1:
-          await voteAgainst(proposalId);
-          break;
-        default:
-          await voteAbstain(proposalId);
+      switch(Number(type)) {
+      	case 0:
+      		await voteFor(proposalId);
+      		break;
+      	case 1:
+      		await voteAgainst(proposalId);
+      		break;
+      	default:
+      		await voteAbstain(proposalId);
       }
     } catch {
       // If MetaMask cancellation, toggle button loading to false
@@ -107,7 +107,7 @@ export default function Home({ defaultProposals, defaultPages }) {
           <h1>Vote By Signature</h1>
           <div>
             <p>
-              Voting by signature lets you place votes across Uniswap Goverance
+              Voting by signature lets you place votes across Compound Goverance
               proposals, without having to send your transactions on-chain,
               saving fees.
             </p>
@@ -147,9 +147,14 @@ export default function Home({ defaultProposals, defaultPages }) {
 
                       {/* Proposal ID + Status + Status update date */}
                       <span>
-                        {proposal.id} • {firstUppercase(proposal.state.value)}{" "}
+                        {proposal.id} •{" "}
+                        {firstUppercase(
+                          proposal.state.value
+                        )}{" "}
                         {dayjs
-                          .unix(proposal.state.start_time)
+                          .unix(
+                            proposal.state.start_time
+                          )
                           .format("MMMM D, YYYY")}
                       </span>
                     </div>
@@ -162,7 +167,8 @@ export default function Home({ defaultProposals, defaultPages }) {
                       >
                         Info
                       </button>
-                      {proposal.state.value === "active" ? (
+                      {proposal.state.value ===
+                      "active" ? (
                         // Check if proposal is active
                         web3 ? (
                           // If authenticated and proposal active, return voting + info buttons
