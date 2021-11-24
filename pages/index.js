@@ -115,7 +115,7 @@ export default function Home({ defaultProposals, defaultPages }) {
 
           {/* Number of voteable proposals */}
           <div>
-            <h2>{pages.entries}</h2>
+            <h2 id="numeric">{pages.entries}</h2>
             <h3>Total Proposals</h3>
           </div>
         </div>
@@ -146,7 +146,7 @@ export default function Home({ defaultProposals, defaultPages }) {
                       </h4>
 
                       {/* Proposal ID + Status + Status update date */}
-                      <span>
+                      <span id="numeric">
                         {proposal.id} • {firstUppercase(proposal.state.value)}{" "}
                         {dayjs
                           .unix(proposal.state.start_time)
