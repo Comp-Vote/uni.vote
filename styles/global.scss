@@ -1,3 +1,12 @@
+// Font - monospace
+@font-face {
+  font-family: "IBM Plex Mono Regular";
+  src: url("/fonts/IBM-Plex-Mono-Regular.ttf");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
 // Font - light
 @font-face {
   font-family: "Inter Light";
@@ -62,4 +71,9 @@ body {
 #nprogress .spinner-icon {
   border-top-color: #00d395 !important;
   border-left-color: #00d395 !important;
+}
+
+// Use monospace font for numeric values
+#numeric {
+  font-family: "IBM Plex Mono Regular";
 }
