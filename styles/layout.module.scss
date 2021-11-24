@@ -74,7 +74,7 @@
 
     div:nth-of-type(2) {
       width: calc(100% - 350px);
-      text-align: center;
+      text-align: right;
 
       ul {
         list-style-type: none;
@@ -86,7 +86,7 @@
           margin: 20px 12px;
 
           a {
-            font-weight: bold;
+            font-weight: light;
             font-size: 15px;
             color: #fff;
             text-decoration: none;
@@ -95,7 +95,7 @@
           }
 
           a:hover {
-            color: #00d395;
+            color: #ff6fcd;
             padding-bottom: 0.5rem;
           }
         }
@@ -163,8 +163,8 @@
 
 // Active navigation link override
 .active {
-  color: #00d395 !important;
-  border-bottom: 1px solid #00d395;
+  /*color: #ff6fcd !important; */
+  border-bottom: 2px solid #ff6fcd;
 }
 
 // Content

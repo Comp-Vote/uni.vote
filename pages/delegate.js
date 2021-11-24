@@ -136,7 +136,7 @@ export default function Delegate({
                   <div className={styles.delegate} key={i}>
                     {/* Delegate rank by vote weight */}
                     <div>
-                      <span>{delegate.rank}</span>
+                      <span id="numeric">{delegate.rank}</span>
                     </div>
 
                     {/* Delegate avatar */}
@@ -182,7 +182,7 @@ export default function Delegate({
 
                     {/* Delegate vote weight */}
                     <div>
-                      <span>
+                      <span id="numeric">
                         {
                           // Calculate vote weight (total / delegate) * 100
                           (
@@ -196,7 +196,7 @@ export default function Delegate({
 
                     {/* Delegate voted proposal count */}
                     <div>
-                      <span>{delegate.proposals_voted}</span>
+                      <span id="numeric">{delegate.proposals_voted}</span>
                     </div>
 
                     {/* Delegate action buttons */}
