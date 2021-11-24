@@ -288,7 +288,7 @@
 
 .proposal:hover,
 .delegate:hover {
-  border-left-color: #00d395;
+  border-left-color: #ff6fcd;
 }
 
 .info {
@@ -309,16 +309,16 @@
 }
 
 .for {
-  border-color: #00d395;
-  color: #00d395;
+  border-color: #ff6fcd;
+  color: #ff6fcd;
 
   > div > div {
-    background-color: #00d395;
+    background-color: #ff6fcd;
   }
 }
 
 .for:hover {
-  background-color: #00d395 !important;
+  background-color: #ff6fcd !important;
 
   > div > div {
     background-color: #fff;
