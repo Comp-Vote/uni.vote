@@ -114,7 +114,7 @@ export default function Home({ defaultProposals, defaultPages }) {
           </div>
 
           {/* Number of voteable proposals */}
-          <div>
+          <div id="count">
             <h2 id="numeric">{pages.entries}</h2>
             <h3>Total Proposals</h3>
           </div>
@@ -227,7 +227,7 @@ export default function Home({ defaultProposals, defaultPages }) {
                   {loading ? "Loading..." : "Load More Proposals"}
                 </button>
               </div>
-            ) : null}
+            ) : <br/>}
           </div>
         </div>
 
