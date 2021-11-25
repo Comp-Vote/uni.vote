@@ -18,7 +18,7 @@ export default function Layout({ children }) {
         {/* Open Graph + Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://uni.vote" />
-        <meta property="og:title" content="Comp.Vote" />
+        <meta property="og:title" content="Uni.Vote" />
         <meta
           property="og:description"
           content="Gas-less voting and delegation for Uniswap governance. Sign and relay your transactions for free."
