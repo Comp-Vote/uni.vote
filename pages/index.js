@@ -227,7 +227,7 @@ export default function Home({ defaultProposals, defaultPages }) {
                   {loading ? "Loading..." : "Load More Proposals"}
                 </button>
               </div>
-            ) : null}
+            ) : <br/>}
           </div>
         </div>
 
