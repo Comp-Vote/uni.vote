@@ -20,7 +20,7 @@
       color: rgb(170, 184, 193);
       max-width: 600px;
       padding: 25px;
-      background-color: rgba(255, 255, 255, 0.02);
+      background-color: rgba(20, 21, 24, 0.45);
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.13);
       vertical-align: middle;
@@ -71,11 +71,12 @@
 
 // Body governance cards
 .card {
-  background-color: rgba(255, 255, 255, 0.02);
+  background-color: rgba(20, 21, 24, 0.45);
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.13);
 
   > div:nth-of-type(1) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.13);
     padding: 16px 28px;
     font-size: 16px;
 
@@ -119,7 +120,6 @@
 
 .proposal {
   padding: 1.25rem 1.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.13);
   border-left: 2px solid transparent;
 
   > div {
@@ -158,7 +158,7 @@
   }
 
   h4 {
-    margin: 0px 0px 0px 0px;
+    margin: 0px;
     font-size: 1rem;
     line-height: 1.35;
     color: white;
@@ -166,7 +166,7 @@
   }
 
   span {
-    margin: 0px 0px 0px 0px;
+    margin: 0px;
     color: #aab8c1;
     font-weight: 600;
     font-size: 13px;
@@ -177,7 +177,6 @@
 
 .legend {
   padding: 1rem 1.75rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   position: relative;
 
   span {
@@ -201,7 +200,6 @@
 
 .delegate {
   padding: 1rem 1.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.13);
   border-left: 2px solid transparent;
 
   > div {
@@ -420,7 +418,7 @@
 
 // Swagger documentation CTA
 .swagger {
-  background-color: rgba(255, 255, 255, 0.02);
+  background-color: rgba(20, 21, 24, 0.45);
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.13);
   padding: 0px !important;
@@ -517,9 +515,9 @@
     div:nth-of-type(2) {
       width: calc(100% - 3.5rem);
       padding: 0rem 1.75rem;
-      text-align: left;
+      text-align: center;
       border-top-right-radius: 0px;
-      border-bottom-left-radius: 4px;
+      border-bottom-left-radius: 20px;
     }
   }
 

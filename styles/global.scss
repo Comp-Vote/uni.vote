@@ -77,3 +77,23 @@ body {
 #numeric {
   font-family: "IBM Plex Mono Regular";
 }
+
+// Proposal count card style override
+#count {
+  background: radial-gradient(
+      145.05% 331.61% at 17.49% 21.17%,
+      rgba(255, 199, 0, 0.09) 0%,
+      rgba(255, 0, 0, 0) 89.12%
+    ),
+    radial-gradient(
+      214.41% 214.41% at 24.32% -46.4%,
+      rgba(203, 6, 231, 0.4) 0%,
+      rgba(240, 24, 164, 0.4) 100%
+    ),
+    radial-gradient(
+      141.89% 271.8% at 93.17% 0%,
+      rgba(219, 255, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0) 100%
+    ) !important;
+    border: none;
+}
