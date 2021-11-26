@@ -29,6 +29,9 @@ export default async (req, res) => {
         `) {
 						id
 						delegatedVotes
+            votes {
+              id
+            }
 					}
 				}`,
     }
@@ -48,7 +51,7 @@ export default async (req, res) => {
   for (const x in accounts) {
     let a = accounts[x];
     a.address = a.id;
-    a.proposals_voted = 0;
+    a.proposals_voted = a.votes.length;
     a.votes = a.delegatedVotes;
     delete a.delegatedVotes;
     delete a.id;
