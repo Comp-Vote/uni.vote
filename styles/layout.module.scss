@@ -16,13 +16,12 @@
       vertical-align: top;
 
       button {
-        padding: 0rem 1.6rem 0.1rem;
-        height: 32px;
+        padding: 0rem 1.6rem;
+        height: 50px;
         font-size: 15px;
-        font-weight: 600;
-        transition: 0.2s ease-in;
-        background-color: transparent;
-        background-size: 300%;
+        font-weight: bold;
+        transition: 0.2s ease-in, color 0.2s ease-in;
+        background-color: #fd79a8;
         background-image: linear-gradient(
           117deg,
           rgba(245, 26, 133, 0.9) 0%,
@@ -30,27 +29,45 @@
           rgba(236, 96, 188, 0.9) 99%
         );
         color: #fff;
-        border: none;
-        border-radius: 12px;
-        margin-top: 15px;
-        margin-left: 18px;
+        border: 1px solid rgba(20, 21, 24, 0.45);
+        border-radius: 3px;
+        margin-top: 5px;
+        float: right;
         cursor: pointer;
+
+        span {
+          display: inline-block;
+          vertical-align: middle;
+        }
+
+        svg {
+          display: inline-block;
+          vertical-align: middle;
+          padding-left: 10px;
+          height: 17px;
+          width: 17px;
+
+          path {
+            fill: #fff;
+            transition: fill 0.2s ease-in;
+          }
+        }
       }
 
       button:hover {
-        background-position: right;
+        background: transparent;
+        border: 1px solid #e84393;
+        color: #fff;
+
+        path {
+          fill: #fff;
+        }
+      }
+
+      button:focus {
+        outline: none;
       }
     }
-
-    div:nth-of-type(1) {
-      width: 150px;
-
-      img {
-        height: 30px;
-        margin-top: 16px;
-      }
-    }
-
     div:nth-of-type(2) {
       width: calc(100% - 350px);
       text-align: right;
