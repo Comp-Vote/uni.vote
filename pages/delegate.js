@@ -252,6 +252,7 @@ export default function Delegate({
                 {web3 ? (
                   <>
                     <input
+                      id="numeric"
                       type="text"
                       placeholder="0xac5720d6ee2d7872b88914c9c5fa9bf38e72faf6"
                       value={customAddress}

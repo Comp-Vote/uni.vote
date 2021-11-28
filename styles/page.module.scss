@@ -400,15 +400,18 @@
   }
 
   input {
-    padding: 0.6rem 1.2rem;
-    width: calc(100% - 2.4rem - 2px);
+    background: rgba(20, 21, 24, 0.45);
+    border: 1px solid #657786;
+    border-radius: 5px;
+    color: #fff;
     font-size: 15px;
     margin-block-end: 15px;
-    border-radius: 5px;
-    border: 1px solid #657786;
+    padding: 0.6rem 1.2rem;
+    width: calc(100% - 2.4rem - 2px);
   }
 
   input:focus {
+    border: 1px solid #e84393;
     outline: none;
   }
 
