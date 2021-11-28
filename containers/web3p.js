@@ -29,6 +29,7 @@ function useWeb3() {
       network: "mainnet",
       cacheProvider: true,
       providerOptions: providerOptions,
+      theme: "dark",
     });
 
     // Set web3Modal
