@@ -1,3 +1,4 @@
+import Image from "next/image"; // Image rendering
 import Link from "next/link"; // Link routing
 import { web3p } from "containers"; // Web3 provider
 import { useRouter } from "next/router"; // Router
@@ -40,18 +41,12 @@ export default function Header() {
       {/* Center sizer */}
       <div>
         {/* Logo */}
-        <div>
-          <Link href="/">
-            <a>
-              <img
-                src="brand/uniswap-logo.svg"
-                alt="Uniswap logo"
-                height="30"
-                width="136"
-              />
-            </a>
-          </Link>
-        </div>
+        <Link href="/">
+          <div className={styles.logo}>
+            <Image src="/brand/uniswap-logo.svg" height={60} width={60} />
+            <h4>uni.vote</h4>
+          </div>
+        </Link>
 
         {/* Menu */}
         <div>

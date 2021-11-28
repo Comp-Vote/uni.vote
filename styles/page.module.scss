@@ -302,6 +302,7 @@
 
 .info:hover {
   background-color: #657786 !important;
+  border: 1px solid #657786 !important;
 
   > div > div {
     background-color: #fff;
@@ -319,6 +320,7 @@
 
 .for:hover {
   background-color: #ff6fcd !important;
+  border: 1px solid #ff6fcd !important;
 
   > div > div {
     background-color: #fff;
@@ -326,16 +328,17 @@
 }
 
 .against {
-  border-color: rgb(214, 2, 44);
-  color: rgb(214, 2, 44);
+  border-color: #e74c3c;
+  color: #e74c3c;
 
   > div > div {
-    background-color: rgb(214, 2, 44);
+    background-color: #000000;
   }
 }
 
 .against:hover {
-  background-color: rgb(214, 2, 44) !important;
+  background-color: #e74c3c !important;
+  border: 1px solid #e74c3c !important;
 
   > div > div {
     background-color: #fff;
@@ -343,16 +346,18 @@
 }
 
 .abstain {
-  border-color: #000000;
-  color: #000000;
+  border-color: #bdc3c7;
+  color: #bdc3c7;
 
   > div > div {
-    background-color: #000000;
+    background-color: #fff;
   }
 }
 
 .abstain:hover {
-  background-color: #000000 !important;
+  background-color: #bdc3c7 !important;
+  border: 1px solid #bdc3c7 !important;
+  color: #2c3e50 !important;
 
   > div > div {
     background-color: #fff;
@@ -400,15 +405,18 @@
   }
 
   input {
-    padding: 0.6rem 1.2rem;
-    width: calc(100% - 2.4rem - 2px);
+    background: rgba(20, 21, 24, 0.45);
+    border: 1px solid #657786;
+    border-radius: 5px;
+    color: #fff;
     font-size: 15px;
     margin-block-end: 15px;
-    border-radius: 5px;
-    border: 1px solid #657786;
+    padding: 0.6rem 1.2rem;
+    width: calc(100% - 2.4rem - 2px);
   }
 
   input:focus {
+    border: 1px solid #e84393;
     outline: none;
   }
 
