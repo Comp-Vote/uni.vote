@@ -27,6 +27,7 @@ const MISFORMATTED_PROPOSAL_TITLES = {
   3: "Uniswap Grants Program v0.1",
   8: "Upgrade Governance Contract to Compound's Governor Bravo",
   9: "Add 1 Basis Point Fee Tier",
+  10: "Should Uniswap v3 be deployed to Polygon?",
 };
 
 /**
