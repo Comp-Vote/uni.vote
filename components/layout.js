@@ -60,7 +60,7 @@ export default function Layout({ children }) {
         <link
           rel="mask-icon"
           href="/favicon/safari-pinned-tab.svg"
-          color="#00d395"
+          color="#ff6fcd"
         />
         <link rel="shortcut icon" href="/favicon/favicon.ico" />
         <meta name="msapplication-TileColor" content="#ffffff" />
@@ -98,6 +98,25 @@ export default function Layout({ children }) {
               rel="noopener noreferrer"
             >
               anish
+            </a>
+            .
+          </span>
+          <span>
+            With contributions from{" "}
+            <a
+              href="https://twitter.com/sehyunchung"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              sehyun
+            </a>{" "}
+            and{" "}
+            <a
+              href="https://twitter.com/jo3_mo"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              joe
             </a>
             .
           </span>
