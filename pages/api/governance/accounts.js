@@ -24,11 +24,12 @@ export default async (req, res) => {
         `{
 					delegates(first:` +
         page_size +
-        `, orderBy:delegatedVotes, orderDirection:desc, skip:` +
+        `, orderBy:numberVotes, orderDirection:desc, skip:` +
         offset +
         `) {
 						id
 						delegatedVotes
+            numberVotes
             votes {
               id
             }
@@ -51,7 +52,7 @@ export default async (req, res) => {
   for (const x in accounts) {
     let a = accounts[x];
     a.address = a.id;
-    a.proposals_voted = a.votes.length;
+    a.proposals_voted = a.numberVotes;
     a.votes = a.delegatedVotes;
     delete a.delegatedVotes;
     delete a.id;
