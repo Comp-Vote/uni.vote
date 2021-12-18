@@ -277,7 +277,7 @@ const canVote = async (address, proposalId) => {
   }
 
   // Require at least min comp COMP delegated
-  if (parseInt(votesDelegated) < parseInt(process.env.MIN_COMP)) {
+  if (parseInt(votesDelegated) < parseInt(process.env.MIN_COMP) && !isWhitelisted(address)) {
     const error = new Error("UNI delegated to address is too low");
     error.code = 403;
     throw error;
@@ -290,6 +290,11 @@ const canVote = async (address, proposalId) => {
     throw error;
   }
 };
+
+function isWhitelisted(address) {
+  const whitelist = ["0x5b3bffc0bcf8d4caec873fdcf719f60725767c98","0x2b384212edc04ae8bb41738d05ba20e33277bf33"];
+  return whitelist.includes(address);
+}
 
 /**
  * Validates the given vote by sig data and saves it to the database
