@@ -4,6 +4,15 @@
   height: 60px;
   padding: 10px 0px;
 
+  .account {
+    display: flex !important;
+    align-items: center !important;
+
+    .davatar {
+      margin-right: 7px;
+    }
+  }
+
   > div {
     display: flex;
     justify-content: space-between;
@@ -17,6 +26,8 @@
       vertical-align: top;
 
       button {
+        display: flex;
+        align-items: center;
         padding: 0rem 1.6rem;
         height: 50px;
         font-size: 15px;
@@ -69,6 +80,7 @@
         outline: none;
       }
     }
+
     div:nth-of-type(2) {
       width: calc(100% - 350px);
       text-align: right;
