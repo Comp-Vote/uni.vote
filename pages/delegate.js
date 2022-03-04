@@ -94,7 +94,7 @@ export default function Delegate({
               <h2>
                 <a
                   // Link to Uniswap Governance profile on tally
-                  href={`https://www.withtally.com/voter/${currentDelegate}/governance/eip155:1:0x408ED6354d4973f66138C91495F2f2FCbd8724C3}
+                  href={`https://www.withtally.com/voter/${currentDelegate}/governance/eip155:1:0x408ED6354d4973f66138C91495F2f2FCbd8724C3`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
