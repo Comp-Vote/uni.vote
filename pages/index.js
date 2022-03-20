@@ -34,7 +34,7 @@ export default function Home({ defaultProposals, defaultPages }) {
     setLoading(true);
 
     // Collect next page request string and request
-    const nextPage = `api/governance/accounts?page_size=10&get_state_times=true&page_number=${
+    const nextPage = `https://uni.vote/api/governance/proposals?page_size=10&get_state_times=true&page_number=${
       pages.current + 1
     }`;
     const response = await axios.get(nextPage);

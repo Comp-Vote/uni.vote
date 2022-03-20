@@ -33,3 +33,4 @@ yarn-error.log*
 
 # vscode
 .vscode/
+package-lock.json
