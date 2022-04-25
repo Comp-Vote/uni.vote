@@ -256,7 +256,7 @@ async function getTimeFromState(state, proposal, web3) {
       blockToFetch = proposal.endBlock;
       break;
     case "Queued":
-      time = parseInt(proposal.executionET) - 60 * 60 * 24 * 2; // two days
+      time = parseInt(proposal.executionETA) - 60 * 60 * 24 * 2; // two days
       break;
     case "Expired":
       time = parseInt(proposal.executionETA) + 1209600; // Grace period of 2 weeks
