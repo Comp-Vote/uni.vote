@@ -316,6 +316,12 @@ const vote = async (address, proposalId, support, v, r, s) => {
     throw error;
   }
 
+  if(v == "0x00" || v == "0x01") {
+    const error = new Error("invalid signature v input");
+    error.code = 422;
+    throw error;
+  }
+
   if (support > 2) {
     const error = new Error("invalid support value");
     error.code = 422;
