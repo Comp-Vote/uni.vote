@@ -2,6 +2,7 @@ import { delegate } from "helpers"; // delegate helper
 
 export default async (req, res) => {
   const transaction = req.body; // Collect transaction object
+  let vInput;
   
   // Some providers format EIP-712 sig differently
   switch(transaction.v) {
@@ -22,7 +23,7 @@ export default async (req, res) => {
       transaction.delegatee,
       transaction.nonce,
       transaction.expiry,
-      transaction.v,
+      vInput,
       transaction.r,
       transaction.s
     );
