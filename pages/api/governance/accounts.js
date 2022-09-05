@@ -39,15 +39,6 @@ export default async (req, res) => {
   );
   const accounts = graphRes.data.data.delegates;
 
-  const tallyRes = await axios.post(
-    "https://identity.withtally.com/user/profiles/by/address",
-    {
-      addresses: accounts.map((x) => x.id),
-    }
-  );
-
-  const tallyAccountsData = tallyRes.data.data.usersByAddress;
-
   // Combine maps recieved from thegraph and tally
   for (const x in accounts) {
     let a = accounts[x];
@@ -57,18 +48,7 @@ export default async (req, res) => {
     delete a.delegatedVotes;
     delete a.id;
 
-    let b = {};
-    if (tallyAccountsData[accounts[x].address.toLowerCase()]) {
-      b = tallyAccountsData[accounts[x].address.toLowerCase()];
-      b.display_name = b.displayName;
-      b.image_url = b.avatarUrl;
-      delete b.avatarUrl;
-      delete b.tallyId;
-      delete b.addresses;
-      delete b.displayName;
-    }
-
-    accounts[x] = Object.assign({}, a, b);
+    accounts[x] = a;
     accounts[x]["rank"] = Number(x) + offset + 1;
   }
 
