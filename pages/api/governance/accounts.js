@@ -16,37 +16,54 @@ export default async (req, res) => {
     return;
   }
 
-  // Fetch top delegates from thegraph
-  const graphRes = await axios.post(
-    "https://api.thegraph.com/subgraphs/name/arr00/uniswap-governance-v2",
-    {
-      query:
-        `{
-					delegates(first:` +
-        page_size +
-        `, orderBy:delegatedVotes, orderDirection:desc, skip:` +
-        offset +
-        `) {
-						id
-						delegatedVotes
-            numberVotes
-            votes {
-              id
+  // Fetch top delegates from tally
+  const tallyRes = await axios.post("https://api.tally.xyz/query", {
+    query: `query GovernanceTopVoters($governanceId: AccountID!, $pagination: Pagination) {
+          governance(id: $governanceId) {
+            delegates(pagination: $pagination) {
+              account {
+                name
+                picture
+                address
+                identities {
+                  twitter
+                }
+              }
+              participation {
+                stats {
+                  votes {
+                    total
+                  }
+                  weight {
+                    total
+                  }
+                }
+              }
             }
-					}
-				}`,
-    }
-  );
-  const accounts = graphRes.data.data.delegates;
+          }
+        }`,
+    variables: {
+      governanceId: "eip155:1:0x408ED6354d4973f66138C91495F2f2FCbd8724C3",
+      pagination: {
+        limit: page_size,
+        offset,
+      },
+    },
+  });
 
-  // Combine maps recieved from thegraph and tally
+  const accounts = tallyRes.data.data.governance.delegates;
+
   for (const x in accounts) {
     let a = accounts[x];
-    a.address = a.id;
-    a.proposals_voted = a.numberVotes;
-    a.votes = a.delegatedVotes;
-    delete a.delegatedVotes;
-    delete a.id;
+    console.log(a);
+    a.address = a.account.address;
+    a.proposals_voted = a.participation.stats.votes.total;
+    a.votes = a.participation.stats.weight.total / 1e18;
+    a.image_url = a.account.picture;
+    a.display_name = a.account.name;
+    a.twitter = a.account.identities.twitter;
+    delete a.account;
+    delete a.participation;
 
     accounts[x] = a;
     accounts[x]["rank"] = Number(x) + offset + 1;

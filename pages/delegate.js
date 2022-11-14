@@ -156,8 +156,12 @@ export default function Delegate({
                     {/* Delegate name */}
                     <div>
                       <a
-                        // Link name to Etherscan address
-                        href={`https://etherscan.io/address/${delegate.address}`}
+                        // Link name to Twitter or Etherscan if no twitter
+                        href={
+                          !!delegate.twitter && delegate.twitter != ""
+                            ? `https://twitter.com/${delegate.twitter}`
+                            : `https://etherscan.io/address/${delegate.address}`
+                        }
                         target="_blank"
                         rel="noopener noreferrer"
                       >
