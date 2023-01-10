@@ -17,8 +17,10 @@ export default async (req, res) => {
   }
 
   // Fetch top delegates from tally
-  const tallyRes = await axios.post("https://api.tally.xyz/query", {
-    query: `query GovernanceTopVoters($governanceId: AccountID!, $pagination: Pagination) {
+  const tallyRes = await axios.post(
+    "https://api.tally.xyz/query",
+    {
+      query: `query GovernanceTopVoters($governanceId: AccountID!, $pagination: Pagination) {
           governance(id: $governanceId) {
             delegates(pagination: $pagination) {
               account {
@@ -42,17 +44,20 @@ export default async (req, res) => {
             }
           }
         }`,
-    variables: {
-      governanceId: "eip155:1:0x408ED6354d4973f66138C91495F2f2FCbd8724C3",
-      pagination: {
-        limit: page_size,
-        offset,
+      variables: {
+        governanceId: "eip155:1:0x408ED6354d4973f66138C91495F2f2FCbd8724C3",
+        pagination: {
+          limit: page_size,
+          offset,
+        },
       },
     },
-    headers: {
-      "Api-Key": process.env.TALLY_API_KEY,
+    {
+      headers: {
+        "Api-Key": process.env.TALLY_API_KEY,
+      },
     }
-  });
+  );
 
   const accounts = tallyRes.data.data.governance.delegates;
 
