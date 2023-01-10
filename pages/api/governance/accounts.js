@@ -49,6 +49,9 @@ export default async (req, res) => {
         offset,
       },
     },
+    headers: {
+      "Api-Key": process.env.TALLY_API_KEY,
+    }
   });
 
   const accounts = tallyRes.data.data.governance.delegates;
