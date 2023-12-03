@@ -16,40 +16,47 @@ export default async (req, res) => {
     return;
   }
 
-  // Fetch top delegates from tally
+  // Fetch top delegates from the graph
+  const graphRes = await axios.post(
+    "https://api.thegraph.com/subgraphs/name/arr00/uniswap-governance-v2",
+    {
+      query:
+        `{
+					delegates(first:` +
+        page_size +
+        `, orderBy:delegatedVotes, orderDirection:desc, skip:` +
+        offset +
+        `) {
+						id
+						delegatedVotes
+            numberVotes
+					}
+				}`,
+    }
+  );
+
+  // Fetch delegate names from Tally
   const tallyRes = await axios.post(
     "https://api.tally.xyz/query",
     {
-      query: `query GovernanceTopVoters($governanceId: AccountID!, $pagination: Pagination) {
-          governance(id: $governanceId) {
-            delegates(pagination: $pagination) {
-              account {
-                name
-                picture
-                address
-                identities {
-                  twitter
-                }
-              }
-              participation {
-                stats {
-                  votes {
-                    total
-                  }
-                  weight {
-                    total
-                  }
-                }
-              }
-            }
-          }
-        }`,
+      query: `query Accounts(
+      $ids: [AccountID!],
+      $addresses: [Address!]
+    ) {
+      accounts(
+        ids: $ids,
+        addresses: $addresses
+      ) {
+        id
+        address
+        ens
+        twitter
+        name
+        picture
+      }
+    }`,
       variables: {
-        governanceId: "eip155:1:0x408ED6354d4973f66138C91495F2f2FCbd8724C3",
-        pagination: {
-          limit: page_size,
-          offset,
-        },
+        ids: graphRes.data.data.delegates.map((x) => "eip155:1:" + x.id),
       },
     },
     {
@@ -59,22 +66,25 @@ export default async (req, res) => {
     }
   );
 
-  const accounts = tallyRes.data.data.governance.delegates;
+  const theGraphAccounts = graphRes.data.data.delegates;
+  const tallyAccounts = tallyRes.data.data.accounts;
 
-  for (const x in accounts) {
-    let a = accounts[x];
-    console.log(a);
-    a.address = a.account.address;
-    a.proposals_voted = a.participation.stats.votes.total;
-    a.votes = a.participation.stats.weight.total / 1e18;
-    a.image_url = a.account.picture;
-    a.display_name = a.account.name;
-    a.twitter = a.account.identities.twitter;
-    delete a.account;
-    delete a.participation;
+  let accounts = [];
+
+  for (const x in theGraphAccounts) {
+    const graphAccount = theGraphAccounts[x];
+    const tallyAccount = tallyAccounts[x];
+
+    let a = {};
+    a.address = graphAccount.id;
+    a.proposals_voted = graphAccount.numberVotes;
+    a.votes = graphAccount.delegatedVotes;
+    a.image_url = tallyAccount.picture || "";
+    a.display_name = tallyAccount.name || tallyAccount.ens || tallyAccount.twitter;
+    a.twitter = tallyAccount.twitter || "";
+    a.rank = Number(x) + offset + 1;
 
     accounts[x] = a;
-    accounts[x]["rank"] = Number(x) + offset + 1;
   }
 
   let resData = { accounts, pagination_summary };
