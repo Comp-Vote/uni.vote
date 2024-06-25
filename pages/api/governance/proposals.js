@@ -107,7 +107,7 @@ export default async (req, res) => {
 
   [graphRes, states] = await Promise.all([
     axios.post(
-      "https://api.thegraph.com/subgraphs/name/arr00/uniswap-governance-v2",
+      `https://gateway-arbitrum.network.thegraph.com/api/${process.env.GRAPH_API_KEY}/subgraphs/id/FTzC6VrZd8JhJgWfTJnwWgH1Z1dS3GxaosKkRbCqkZAZ`,
       {
         query:
           `{
@@ -134,10 +134,7 @@ export default async (req, res) => {
           GOVERNANCE_ADDRESS_BRAVO,
           "0x3e4f49e6",
           proposalCount - offset,
-          Math.max(
-            initialProposalBravo,
-            proposalCount - offset - page_size
-          ),
+          Math.max(initialProposalBravo, proposalCount - offset - page_size),
           web3
         ).concat(
           genCalls(
