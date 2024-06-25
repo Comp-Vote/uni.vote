@@ -18,7 +18,7 @@ export default async (req, res) => {
 
   // Fetch top delegates from the graph
   const graphRes = await axios.post(
-    "https://api.thegraph.com/subgraphs/name/arr00/uniswap-governance-v2",
+    `https://gateway-arbitrum.network.thegraph.com/api/${process.env.GRAPH_API_KEY}/subgraphs/id/FTzC6VrZd8JhJgWfTJnwWgH1Z1dS3GxaosKkRbCqkZAZ`,
     {
       query:
         `{
