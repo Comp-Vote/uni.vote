@@ -24,7 +24,7 @@ export default async (req, res) => {
         `{
 					delegates(first:` +
         page_size +
-        `, orderBy:delegatedVotes, orderDirection:desc, skip:` +
+        `, orderBy:numberVotes, orderDirection:desc, skip:` +
         offset +
         `) {
 						id
