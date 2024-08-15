@@ -183,19 +183,7 @@ export default async (req, res) => {
       MISFORMATTED_PROPOSAL_TITLES[proposal.id] ??
       proposal.description.split("\n")[0].substring(2);
     newProposal.id = proposal.id;
-    newProposal.uniswap_url = "https://app.uniswap.org/#/vote/";
-    switch (true) {
-      case newProposal.id <= proposalCountDeprecated1:
-        newProposal.uniswap_url += "0/" + newProposal.id;
-        break;
-      case newProposal.id <=
-        proposalCountDeprecated2 + proposalCountDeprecated1:
-        newProposal.uniswap_url +=
-          "1/" + (newProposal.id - proposalCountDeprecated1);
-        break;
-      default:
-        newProposal.uniswap_url += "2/" + newProposal.id;
-    }
+    newProposal.uniswap_url = "https://www.tally.xyz/gov/uniswap/proposal/" + newProposal.id;
 
     const currentState = stringStates.shift();
     let time = null;
